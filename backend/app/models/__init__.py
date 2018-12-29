@@ -1,0 +1,1 @@
+from .Hero import Hero
