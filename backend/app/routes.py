@@ -9,9 +9,30 @@ from .services import HeroService
 def index():
     return "Hello"
 
-# list of heroes
 @app.route('/api/heroes', methods=['GET'])
 def list():
-   response = jsonify(HeroService.list())
-   response.headers.add('Access-Control-Allow-Origin', '*')
-   return response 
+    return createResponse(jsonify(Hero.serialize_list(HeroService.list())))
+
+@app.route('/api/heroes/<int:id>', methods=['GET'])
+def get(id):
+    return createResponse(jsonify(HeroService.get(id).serialize()))
+
+@app.route('/api/heroes/save', methods=['POST'])
+def save():
+    return createResponse(jsonify(HeroService.save()))
+
+@app.route('/api/heroes/<int:id>/update', methods=['GET', 'POST'])
+def update(id):
+    return createResponse(jsonify(HeroService.update()))
+
+def createResponse(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+@app.errorhandler(500)
+def server_error(e):
+    return '<h1>Error page</h1>'
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return '<h1>Error page</h1>'
